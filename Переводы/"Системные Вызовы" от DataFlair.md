@@ -74,34 +74,34 @@ Getting process and device attributes
 This is for interprocess communications.
 
 Functions of interprocess communication:
-
 Creation and deletion of communications connections
 Sending and receiving messages
 Helping OS transfer status information
 Attaching or detaching remote devices
-Rules for passing Parameters for System Call
-Following are the rules for passing parameters to the System Call:
 
-The OS pushes on or pops parameters off the stack.
-We can pass parameters in registers.
-In case parameters are more than registers, they are stored in a block. The block address is passed as a parameter to a register.
-Important System Calls Used in OS
+## Rules for passing Parameters for System Call
+Following are the rules for passing parameters to the System Call:
+- The OS pushes on or pops parameters off the stack.
+- We can pass parameters in registers.
+- In case parameters are more than registers, they are stored in a block. The block address is passed as a parameter to a register.
+
+## Important System Calls Used in OS
 Following are the important system calls used in an OS:
 
-1. wait()
-When a process is running, the rest of the processes stay in the waiting state and wait for their turn. This happens when a parent process creates a child process, and the parent process suspends until the child process is done executing. This suspension of the parent process occurs automatically with the help of the wait() system call. Control moves back to the parent process after the child process ends execution.
+### 1. `wait()`
+Когда процесс запущен, остальные процессы остаются в состоянии ожидания и ждут своей очереди. Это происходит, когда родительский процесс создает дочерний процесс, и родительский процесс приостанавливается до тех пор, пока дочерний процесс не завершится. Приостановка родительского процесса происходит автоматически с помощью системного вызова wait(). Управление возвращается к родительскому процессу после завершения выполнения дочернего процесса.
 
-2. fork()
-This system call allows a process to create copy processes of itself. A parent process creates a child process. This suspends the execution of the parent process until the child process executes.
+### 2. `fork()`
+Этот системный вызов позволяет процессу создавать процессы копирования самого себя. Родительский процесс создает дочерний процесс. Это приостанавливает выполнение родительского процесса до тех пор, пока не выполнится дочерний процесс.
 
-3. exec()
-This system call runs when an executable file replaces the older one when the process is still running. Though the original process identifier still remains as the old process is still executing, the new process replaces things like a stack, data, head, etc.
+### 3. `exec()`
+Этот системный вызов запускается, когда исполняемый файл заменяет старый, когда процесс еще работает. Хотя исходный идентификатор процесса все еще остается, поскольку старый процесс все еще выполняется, новый процесс заменяет такие вещи, как стек, данные, заголовок и т. д.
 
-4. kill():
-This system call sends a termination signal to a process and urges the process to exit. However, it doesn’t really kill a process but can have various meanings.
+### 4. `kill()`
+Этот системный вызов отправляет сигнал завершения процессу и призывает его завершить работу. Однако на самом деле это не убивает процесс, но может иметь различные значения.
 
-5. exit():
-This system call terminates a process. program execution. It defines that the thread execution is complete and the OS can reclaim the resources used by the process.
+### 5. `exit()`
+Этот системный вызов завершает процесс. выполнение программы. Он определяет, что выполнение потока завершено и ОС может вернуть ресурсы, используемые процессом.
 
 ## Заключение
 Системные вызовы предоставляют интерфейс между процессом и ОС. Некоторые из самых важных и используемых системных вызов, в ОС, это `wait()`, `fork()`, `exec()`, `kill()`, `exit()`.
@@ -114,3 +114,6 @@ This system call terminates a process. program execution. It defines that the th
 | Поддержка Информации |	GetCurrentProcessID(), SetTimer(), Sleep() |	getpid(), alarm(), sleep() |
 | Коммуникация |	CreatePipe(), CreateFileMapping(), MapViewOfFile() |	pipe(), shm_open(), mmap() |
 | Защита |	SetFileSecurity(), InitializeSecurityDescriptor(), SetSecurityDescriptor Group() |	chmod(), umask(), chown() |
+
+Источник: "https://data-flair.training/blogs/system-call-in-os/"
+Bc
