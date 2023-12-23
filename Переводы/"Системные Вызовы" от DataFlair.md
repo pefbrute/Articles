@@ -1,25 +1,25 @@
 # Системные Вызовы в ОС
 
 Мы используемые системные вызовы, чтобы предоставить интерфейсы между процессом и ОС.
-Системный запрос помогает процессу запрашивать services from kernel. It is a programmatic method and the only entry point for the kernel system. These services are offered with the help of an API (Application Programming Interface).
+Системный запрос помогает процессу запрашивать службы из ядра. Это программный метод и единственная точка входа в систему ядра. Эти услуги предлагаются с помощью API (интерфейс прикладного программирования).
 
-## Introduction to System Call
+## Введение в системный вызов
 
-### Workings of a System Call in OS
-Following are the steps on how a System Call works:
-Step 1: The processor executes a process in the user mode until a system call interrupts it.
-Step 2: Then on a priority basis, the system call is executed in the kernel mode.
-Step 3: After the completion of system call execution, control returns to user mode.,
-Step 4: The execution resumes in Kernel mode.
+### Работа системного вызова в ОС
+Ниже приведены шаги по работе системного вызова:
+Шаг 1: Процессор выполняет процесс в пользовательском режиме до тех пор, пока его не прервет системный вызов.
+Шаг 2: Затем в приоритетном порядке системный вызов выполняется в режиме ядра.
+Шаг 3: После завершения выполнения системного вызова управление возвращается в пользовательский режим.
+Шаг 4: Выполнение возобновляется в режиме ядра.
 
-### Need for System Calls
-Following are the reasons we need system calls:
+### Необходимость Системных Вызовов
+Ниже приведены причины, по которым нам нужны системные вызовы:
 
-To read and write from files.
-To create or delete files.
-To create and manage new processes.
-To send and receive packets, through network connections.
-To access hardware devices.
+- Чтение и запись из файлов.
+- Для создания или удаления файлов.
+- Создавать и управлять новыми процессами.
+- Для отправки и получения пакетов через сетевые соединения.
+- Для доступа к аппаратным устройствам.
 
 ### Services of System Call in Operating System
 Following are the services provided by a system call:
