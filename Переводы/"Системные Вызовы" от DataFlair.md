@@ -47,35 +47,34 @@
 3. Управление устройствами
 Это помогает в манипуляциях с устройствами, таких как чтение из буферов устройств, запись в буферы устройств и т.д.
 
-Functions of Device Management:
+Функции управления устройством:
+Запрос и освобождение устройств
+Логическое подключение и отсоединение устройств
+Получение и настройка атрибутов устройства
 
-Requesting and releasing devices
-Attaching and detaching devices logically
-Getting and setting device attributes
-4. Information Maintenance
-It handles information and information transfer between OS and the user program.
+4. Обслуживание информации
+Он обрабатывает информацию и ее передачу между ОС и пользовательской программой.
 
-Functions of Information maintenance:
+Функции информационного обслуживания:
+Получение или установка времени и даты
+Получение атрибутов процесса и устройства
 
-Getting or setting time and date
-Getting process and device attributes
-5. Communication
-This is for interprocess communications.
+5. Общение
+Это для межпроцессного взаимодействия.
+Функции межпроцессного взаимодействия:
+- Создание и удаление коммуникационных соединений
+- Отправка и получение сообщений
+- Помощь в передаче информации о состоянии ОС.
+- Подключение или отключение удаленных устройств
 
-Functions of interprocess communication:
-Creation and deletion of communications connections
-Sending and receiving messages
-Helping OS transfer status information
-Attaching or detaching remote devices
+## Правила передачи параметров для системного вызова
+Ниже приведены правила передачи параметров в системный вызов:
+- ОС добавляет или извлекает параметры из стека.
+— Мы можем передавать параметры в регистры.
+- Если параметров больше, чем регистров, они сохраняются в блоке. Адрес блока передается в качестве параметра в регистр.
 
-## Rules for passing Parameters for System Call
-Following are the rules for passing parameters to the System Call:
-- The OS pushes on or pops parameters off the stack.
-- We can pass parameters in registers.
-- In case parameters are more than registers, they are stored in a block. The block address is passed as a parameter to a register.
-
-## Important System Calls Used in OS
-Following are the important system calls used in an OS:
+## Важные системные вызовы, используемые в ОС
+Ниже приведены важные системные вызовы, используемые в ОС:
 
 ### 1. `wait()`
 Когда процесс запущен, остальные процессы остаются в состоянии ожидания и ждут своей очереди. Это происходит, когда родительский процесс создает дочерний процесс, и родительский процесс приостанавливается до тех пор, пока дочерний процесс не завершится. Приостановка родительского процесса происходит автоматически с помощью системного вызова wait(). Управление возвращается к родительскому процессу после завершения выполнения дочернего процесса.
@@ -105,4 +104,3 @@ Following are the important system calls used in an OS:
 | Защита |	SetFileSecurity(), InitializeSecurityDescriptor(), SetSecurityDescriptor Group() |	chmod(), umask(), chown() |
 
 Источник: "https://data-flair.training/blogs/system-call-in-os/"
-Bc
