@@ -106,11 +106,11 @@ This system call terminates a process. program execution. It defines that the th
 ## Summary
 System calls provide an interface between a process and an OS. Some important system calls used in OS are wait(), fork(), exec(), kill(), exit().
 
-| Categories |	Windows |	Unix |
+| Категории |	Windows |	Unix |
 | --- | --- | --- |
-| Process control |	CreateProcess(), ExitProcess(), WaitForSingleObject() |	fork(), exit(), wait() |
-| Device manipulation |	SetConsoleMode(), ReadConsole(), WriteConsole() |	ioctl(), read(), write() |
-| File manipulation |	CreateFile(), ReadFile(), WriteFile(), CloseHandle() |	open(), read(), write(), close() |
-| Information maintenance |	GetCurrentProcessID(), SetTimer(), Sleep() |	getpid(), alarm(), sleep() |
-| Communication |	CreatePipe(), CreateFileMapping(), MapViewOfFile() |	pipe(), shm_open(), mmap() |
-| Protection |	SetFileSecurity(), InitializeSecurityDescriptor(), SetSecurityDescriptor Group() |	chmod(), umask(), chown() |
+| Контроль Процесса |	CreateProcess(), ExitProcess(), WaitForSingleObject() |	fork(), exit(), wait() |
+| Управление Устройствами |	SetConsoleMode(), ReadConsole(), WriteConsole() |	ioctl(), read(), write() |
+| Управление Файлами |	CreateFile(), ReadFile(), WriteFile(), CloseHandle() |	open(), read(), write(), close() |
+| Поддержка Информации |	GetCurrentProcessID(), SetTimer(), Sleep() |	getpid(), alarm(), sleep() |
+| Коммуникация |	CreatePipe(), CreateFileMapping(), MapViewOfFile() |	pipe(), shm_open(), mmap() |
+| Защита |	SetFileSecurity(), InitializeSecurityDescriptor(), SetSecurityDescriptor Group() |	chmod(), umask(), chown() |
