@@ -14,49 +14,38 @@
 
 ### Необходимость Системных Вызовов
 Ниже приведены причины, по которым нам нужны системные вызовы:
-
 - Чтение и запись из файлов.
 - Для создания или удаления файлов.
 - Создавать и управлять новыми процессами.
 - Для отправки и получения пакетов через сетевые соединения.
 - Для доступа к аппаратным устройствам.
 
-### Services of System Call in Operating System
-Following are the services provided by a system call:
+### Службы системного вызова в операционной системе
+Ниже приведены услуги, предоставляемые системным вызовом:
+- Управляет основной памятью
+- Помогает получить доступ к файлам и каталогам и управляет файловой системой.
+- Создает и управляет новыми процессами.
+- Обработка устройств ввода/вывода
+- Обеспечивает защиту системы
 
-Manages main memory
-Helps access files and directories and manages the file system.
-Creates and manages new processes
-I/O device handling
-Provides system protection
-Types of System calls in Operating System
-The five types of System Calls are:
+### Типы системных вызовов в операционной системе
+#### Пять типов системных вызовов:
 
-1. Process Control
-It performs the tasks of process creation, process termination, etc.
+### Типы системных вызовов в операционной системе
+#### Пять типов системных вызовов:
 
-Functions of process Control:
+2. Управление файлами
+Он выполняет задания, связанные с управлением файлами.
 
-End and Abort
-Loading and Execution of a process
-Creation and termination of a Process
-Wait and Signal Event
-Allocation of free memory
-2. File Management
-Technology is evolving rapidly!
-Stay updated with DataFlair on WhatsApp!!
+Функции управления файлами:
+Создание файла
+Удаление файла
+Открытие и закрытие файла
+Чтение, письмо и перемещение
+Получение и установка атрибутов файла
 
-It handles jobs regarding file manipulation.
-
-Functions of File Management:
-
-Creation of a file
-Deletion of a file
-Opening and closing of a file
-Reading, writing, and repositioning
-Getting and setting file attributes
-3. Device Management
-It helps in device manipulation like reading from device buffers, writing into device buffers, etc.
+3. Управление устройствами
+Это помогает в манипуляциях с устройствами, таких как чтение из буферов устройств, запись в буферы устройств и т.д.
 
 Functions of Device Management:
 
