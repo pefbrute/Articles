@@ -103,8 +103,8 @@ This system call sends a termination signal to a process and urges the process t
 5. exit():
 This system call terminates a process. program execution. It defines that the thread execution is complete and the OS can reclaim the resources used by the process.
 
-## Summary
-System calls provide an interface between a process and an OS. Some important system calls used in OS are wait(), fork(), exec(), kill(), exit().
+## Заключение
+Системные вызовы предоставляют интерфейс между процессом и ОС. Некоторые из самых важных и используемых системных вызов, в ОС, это `wait()`, `fork()`, `exec()`, `kill()`, `exit()`.
 
 | Категории |	Windows |	Unix |
 | --- | --- | --- |
