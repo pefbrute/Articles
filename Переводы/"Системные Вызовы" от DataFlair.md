@@ -107,6 +107,7 @@ This system call terminates a process. program execution. It defines that the th
 System calls provide an interface between a process and an OS. Some important system calls used in OS are wait(), fork(), exec(), kill(), exit().
 
 | Categories |	Windows |	Unix |
+| --- | --- | --- |
 | Process control |	CreateProcess(), ExitProcess(), WaitForSingleObject() |	fork(), exit(), wait() |
 | Device manipulation |	SetConsoleMode(), ReadConsole(), WriteConsole() |	ioctl(), read(), write() |
 | File manipulation |	CreateFile(), ReadFile(), WriteFile(), CloseHandle() |	open(), read(), write(), close() |
