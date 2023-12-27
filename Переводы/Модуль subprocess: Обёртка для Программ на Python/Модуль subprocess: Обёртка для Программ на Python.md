@@ -18,7 +18,6 @@ Source Code: Click here to download the free source code that you’ll use to ge
 Processes and Subprocesses
 First off, you might be wondering why there’s a sub in the Python subprocess module name. And what exactly is a process, anyway? In this section, you’ll answer these questions. You’ll come away with a high-level mental model for thinking about processes. If you’re already familiar with processes, then you might want to skip directly to basic usage of the Python subprocess module.
 
-Remove ads
 Processes and the Operating System
 Whenever you use a computer, you’ll always be interacting with programs. A process is the operating system’s abstraction of a running program. So, using a computer always involve processes. Start menus, app bars, command-line interpreters, text editors, browsers, and more—every application comprises one or more processes.
 
@@ -63,7 +62,6 @@ This example shows a minimal amount of C code necessary for the file to compile 
 
 So, what processes are running on your system right now? In the next section, you’ll explore some of the tools that you can use to take a peek at your system’s process tree. Being able to see what processes are running and how they’re structured will come in handy when visualizing how the subprocess module works.
 
-Remove ads
 Active Processes on Your System
 You may be curious to see what processes are running on your system right now. To do that, you can use platform-specific utilities to track them:
 
@@ -113,7 +111,6 @@ In this section, you’ll take a look at some of the most basic examples demonst
 
 If you want to follow along with the examples, then create a new folder. All the examples and programs can be saved in this folder. Navigate to this newly created folder on the command line in preparation for the examples coming up. All the code in this tutorial is standard library Python—with no external dependencies required—so a virtual environment isn’t necessary.
 
-Remove ads
 The Timer Example
 To come to grips with the Python subprocess module, you’ll want a bare-bones program to run and experiment with. For this, you’ll use a program written in Python:
 
@@ -201,7 +198,6 @@ Then again, subprocess can be a remarkably useful tool to get something done qui
 
 You’ve successfully started new processes using Python! That’s subprocess at its most basic. Next up, you’ll take a closer look at the CompletedProcess object that’s returned from run().
 
-Remove ads
 The CompletedProcess Object
 When you use run(), the return value is an instance of the CompletedProcess class. As the name suggests, run() returns the object only once the child process has ended. It has various attributes that can be helpful, such as the args that were used for the process and the returncode.
 
@@ -270,7 +266,6 @@ In this example, the first dot of the timer animation was output, but the subpro
 
 The other type of error that might happen is if the program doesn’t exist on that particular system, which raises one final type of error.
 
-Remove ads
 FileNotFoundError for Programs That Don’t Exist
 The final type of exception you’ll be looking at is the FileNotFoundError, which is raised if you try and call a program that doesn’t exist on the target system:
 
@@ -340,7 +335,6 @@ In PowerShell, ls is the default alias for Get-ChildItem, but calling that won�
 
 The fact that many text-based programs can operate independently from the shell may make you wonder if you can cut out the middle process—namely, the shell—and use subprocess directly with the text-based programs typically associated with the shell.
 
-Remove ads
 Use Cases for the Shell and subprocess
 There are a few common reasons why you might want to call the shell with the Python subprocess module:
 
@@ -403,7 +397,6 @@ So, calling sh on your system may result in a different shell than what is found
 
 You’ll note that the token after "-c" should be one single token, with all the spaces included. Here you’re giving control to the shell to parse the command. If you were to include more tokens, this would be interpreted as more options to pass to the shell executable, not as additional commands to run inside the shell.
 
-Remove ads
 Basic Usage of subprocess With Windows Shells
 In this section, you’ll cover basic use of the shell with subprocess in a Windows environment.
 
@@ -475,7 +468,6 @@ Luckily, the operating system wouldn’t let you do this to some particularly im
 
 So, make sure that if you’re dynamically building user inputs to feed into a subprocess call, then you’re very careful! With that warning, coming up you’ll be covering using the outputs of commands and chaining commands together—in short, how to communicate with processes once they’ve started.
 
-Remove ads
 Communication With Processes
 You’ve used the subprocess module to execute programs and send basic commands to the shell. But something important is still missing. For many tasks that you might want to use subprocess for, you might want to dynamically send inputs or use the outputs in your Python code later.
 
@@ -539,7 +531,6 @@ With the output available, you can use more than one subprocess to grab values a
 1085
 In this example, you start two magic number processes that fetch two magic numbers and then add them together. For now, you rely on the automatic decoding of the bytes object by the int() constructor. In the next section, though, you’ll learn how to decode and encode explicitly.
 
-Remove ads
 The Decoding of Standard Streams
 Processes communicate in bytes, and you have a few different ways to deal with encoding and decoding these bytes. Beneath the surface, subprocess has a few ways of getting into text mode.
 
@@ -610,7 +601,6 @@ Now that you know what’s happening—namely that stdin can be stocked, as it w
 
 The game developer gets wise to this, though, and vows to release another version, which will guard against this exploit. In the meantime, you’ll peek a bit further under the hood of subprocess and learn about how it wires up the standard I/O streams.
 
-Remove ads
 Pipes and the Shell
 To really understand subprocesses and the redirection of streams, you really need to understand pipes and what they are. This is especially true if you want to wire up two processes together, feeding one stdout into another process’s stdin, for instance. In this section, you’ll be coming to grips with pipes and how to use them with the subprocess module.
 
