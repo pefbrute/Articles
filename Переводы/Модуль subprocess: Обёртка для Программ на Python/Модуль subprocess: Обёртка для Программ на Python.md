@@ -468,138 +468,137 @@ Luckily, the operating system wouldn’t let you do this to some particularly im
 
 So, make sure that if you’re dynamically building user inputs to feed into a subprocess call, then you’re very careful! With that warning, coming up you’ll be covering using the outputs of commands and chaining commands together—in short, how to communicate with processes once they’ve started.
 
-Communication With Processes
-You’ve used the subprocess module to execute programs and send basic commands to the shell. But something important is still missing. For many tasks that you might want to use subprocess for, you might want to dynamically send inputs or use the outputs in your Python code later.
+Взаимодействие с процессами
+Вы использовали модуль subprocess для выполнения программ и отправки основных команд в командную оболочку. Но чего-то важного по-прежнему не хватает. Для многих задач, для которых вы, возможно, захотите использовать подпроцесс, вам может потребоваться динамически отправлять входные данные или использовать выходные данные в вашем коде Python позже.
 
-To communicate with your process, you first should understand a little bit about how processes communicate in general, and then you’ll take a look at two examples to come to grips with the concepts.
+Чтобы взаимодействовать с вашим процессом, вам сначала следует немного разобраться в том, как процессы взаимодействуют в целом, а затем вы взглянете на два примера, чтобы разобраться с концепциями.
 
-The Standard I/O Streams
-A stream at its most basic represents a sequence of elements that aren’t available all at once. When you read characters and lines from a file, you’re working with a stream in the form of a file object, which at its most basic is a file descriptor. File descriptors are often used for streams. So, it’s not uncommon to see the terms stream, file, and file-like used interchangeably.
+Стандартные потоки ввода-вывода
+Поток по своей сути представляет собой последовательность элементов, которые доступны не все сразу. Когда вы считываете символы и строки из файла, вы работаете с потоком в форме файлового объекта, который по своей сути является файловым дескриптором. Файловые дескрипторы часто используются для потоков. Таким образом, нередко термины stream, file и file-like используются взаимозаменяемо.
 
-When processes are initialized, there are three special streams that a process makes use of. A process does the following:
+При инициализации процессов есть три специальных потока, которые использует процесс. Процесс выполняет следующее:
 
-Reads stdin for input
-Writes to stdout for general output
-Writes to stderr for error reporting
-These are the standard streams—a cross-platform pattern for process communication.
+Считывает стандартный ввод для ввода данных
+Записывает в стандартный вывод для общего вывода
+Записывает в stderr для сообщения об ошибках
+Это стандартные потоки — кроссплатформенный шаблон для взаимодействия процессов.
 
-Sometimes the child process inherits these streams from the parent. This is what’s happening when you use subprocess.run() in the REPL and are able to see the output of the command. The stdout of the Python interpreter is inherited by the subprocess.
+Иногда дочерний процесс наследует эти потоки от родительского. Это то, что происходит, когда вы используете subprocess.run() в REPL и можете видеть выходные данные команды. Стандартный вывод интерпретатора Python наследуется подпроцессом.
 
-When you’re in a REPL environment, you’re looking at a command-line interface process, complete with the three standard I/O streams. The interface has a shell process as a child process, which itself has a Python REPL as a child. In this situation, unless you specify otherwise, stdin comes from the keyboard, while stdout and stderr are displayed on-screen. The interface, the shell, and the REPL share the streams:
+Когда вы находитесь в среде REPL, вы смотрите на процесс интерфейса командной строки, в комплекте с тремя стандартными потоками ввода-вывода. Интерфейс имеет процесс оболочки в качестве дочернего процесса, который сам по себе имеет Python REPL в качестве дочернего процесса. В этой ситуации, если не указано иное, stdin вводится с клавиатуры, в то время как stdout и stderr отображаются на экране. Интерфейс, оболочка и REPL совместно используют потоки:
 
-Diagram demonstrating the structure of processes involved in repl environment
-You can think of the standard I/O streams as byte dispensers. The subprocess fills up stdout and stderr, and you fill up stdin. Then you read the bytes in stdout and stderr, and the subprocess reads from stdin.
+Диаграмма, демонстрирующая структуру процессов, задействованных в среде repl
+Вы можете думать о стандартных потоках ввода-вывода как о распределителях байтов. Подпроцесс заполняет stdout и stderr, а вы заполняете stdin. Затем вы считываете байты из stdout и stderr, а подпроцесс считывает из stdin.
 
-As with a dispenser, you can stock stdin before it gets linked up to a child process. The child process will then read from stdin as and when it needs to. Once a process has read from a stream, though, the bytes are dispensed. You can’t go back and read them again:
+Как и в случае с распределителем, вы можете запастись stdin до того, как он будет подключен к дочернему процессу. Дочерний процесс затем будет считывать данные из stdin по мере необходимости. Однако, как только процесс считывает данные из потока, байты распределяются. Вы не можете вернуться и прочитать их снова:
 
 
-These three streams, or files, are the basis for communicating with your process. In the next section, you’ll start to see this in action by getting the output of a magic number generator program.
+Эти три потока, или файла, являются основой для взаимодействия с вашим процессом. В следующем разделе вы начнете видеть это в действии, получив выходные данные программы-генератора магических чисел.
 
-The Magic Number Generator Example
-Often, when using the subprocess module, you’ll want to use the output for something and not just display the output as you have been doing so far. In this section, you’ll use a magic number generator that outputs, well, a magic number.
+Пример генератора магических чисел
+Часто при использовании модуля подпроцесса вам захочется использовать выходные данные для чего-то, а не просто отображать выходные данные, как вы делали до сих пор. В этом разделе вы будете использовать генератор магических чисел, который выводит, ну, магическое число.
 
-Imagine that the magic number generator is some obscure program, a black box, inherited across generations of sysadmins at your job. It outputs a magic number that you need for your secret calculations. You’ll read from the stdout of subprocess and use it in your wrapper Python program:
+Представьте, что генератор магических чисел - это какая-то непонятная программа, черный ящик, унаследованный от поколений сисадминов на вашей работе. Он выводит магическое число, необходимое вам для ваших секретных вычислений. Вы прочитаете из stdout подпроцесса и используете его в своей программе-оболочке на Python:
 
 # magic_number.py
 
-from random import randint
+из случайного импорта randint
 
 print(randint(0, 1000))
-Okay, not really so magical. That said, it’s not the magic number generator that you’re interested in—it’s interacting with a hypothetical black box with subprocess that’s interesting. To grab the number generator’s output to use later, you can pass in a capture_output=True argument to run():
+Ладно, на самом деле все не так волшебно. Тем не менее, вас интересует не генератор магических чисел — интересно взаимодействие с гипотетическим черным ящиком с подпроцессом. Чтобы захватить выходные данные генератора чисел для последующего использования, вы можете передать аргумент capture_output=True для запуска():
 
->>> import subprocess
+>>> подпроцесс импорта
 >>> magic_number_process = subprocess.run(
-...     ["python", "magic_number.py"], capture_output=True
+... ["python", "magic_number.py"], capture_output=True
 ... )
->>> magic_number_process.stdout
-b'769\n'
-Passing a capture_output argument of True to run() makes the output of the process available at the .stdout attribute of the completed process object. You’ll note that it’s returned as a bytes object, so you need to be mindful of encodings when reading it.
+>>> magic_number_process.стандартный
+вывод b'769\n'
+Передача аргумента capture_output значения True функции run() делает выходные данные процесса доступными в атрибуте .stdout завершенного объекта process. Вы заметите, что он возвращается как объект bytes, поэтому вам нужно помнить о кодировках при его чтении.
 
-Also note that the .stdout attribute of the CompletedProcess is no longer a stream. The stream has been read, and it’s stored as a bytes object in the .stdout attribute.
+Также обратите внимание, что атрибут .stdout завершенного процесса больше не является потоком. Поток был прочитан и сохранен как объект bytes в атрибуте .stdout.
 
-With the output available, you can use more than one subprocess to grab values and operate on them in your code:
+Имея доступные выходные данные, вы можете использовать более одного подпроцесса для получения значений и обработки их в своем коде:
 
->>> import subprocess
+>>> подпроцесс импорта
 >>> sum(
-...     int(
-...         subprocess.run(
-...             ["python", "magic_number.py"], capture_output=True
-...         ).stdout
-...     )
-...     for _ in range(2)
+... int(
+... subprocess.run(
+... ["python", "magic_number.py"], capture_output=True
+...         ).стандартный
+вывод ...     )
+...     для _ в диапазоне(2)
 ... )
-1085
-In this example, you start two magic number processes that fetch two magic numbers and then add them together. For now, you rely on the automatic decoding of the bytes object by the int() constructor. In the next section, though, you’ll learn how to decode and encode explicitly.
 
-The Decoding of Standard Streams
-Processes communicate in bytes, and you have a few different ways to deal with encoding and decoding these bytes. Beneath the surface, subprocess has a few ways of getting into text mode.
+В этом примере вы запускаете два процесса с магическими числами, которые извлекают два магических числа и затем складывают их вместе. На данный момент вы полагаетесь на автоматическое декодирование объекта bytes конструктором int(). В следующем разделе, однако, вы узнаете, как декодировать и кодировать явно.
 
-Text mode means that subprocess will try to take care of encoding itself. To do that, it needs to know what character encoding to use. Most of the options for doing this in subprocess will try to use the default encoding. However, you generally want to be explicit about what encoding to use to prevent a bug that would be hard to find in the future.
+Декодирование стандартных потоков
+Процессы обмениваются данными в байтах, и у вас есть несколько различных способов кодирования и декодирования этих байтов. На первый взгляд, у подпроцесса есть несколько способов перехода в текстовый режим.
 
-You can pass a text=True argument for Python to take care of encodings using the default encoding. But, as mentioned, it’s always safer to specify the encodings explicitly using the encoding argument, as not all systems work with the nearly universal UTF-8:
+Текстовый режим означает, что подпроцесс попытается сам позаботиться о кодировании. Для этого ему необходимо знать, какую кодировку символов использовать. Большинство опций для выполнения этого в подпроцессе будут пытаться использовать кодировку по умолчанию. Однако, как правило, вы хотите четко указать, какую кодировку использовать, чтобы предотвратить ошибку, которую будет трудно найти в будущем.
+
+Вы можете передать аргумент text=True, чтобы Python позаботился о кодировках, используя кодировку по умолчанию. Но, как уже упоминалось, всегда безопаснее указывать кодировки явно, используя аргумент encoding, поскольку не все системы работают с почти универсальным UTF-8:
 
 >>> magic_number_process = subprocess.run(
-...     ["python", "magic_number.py"], capture_output=True, encoding="utf-8"
+... ["python", "magic_number.py"], capture_output=True, encoding="utf-8"
 ... )
 ...
 >>> magic_number_process.stdout
 '647\n'
-If in text mode, the .stdout attribute on a CompletedProcess is now a string and not a bytes object.
+Если в текстовом режиме атрибут .stdout для завершенного процесса теперь является строкой, а не байтовым объектом.
 
-You can also decode the bytes returned by calling the .decode() method on the stdout attribute directly, without requiring text mode at all:
+Вы также можете декодировать возвращаемые байты, вызывая метод .decode() для атрибута stdout напрямую, вообще не требуя текстового режима:
 
 >>> magic_number_process = subprocess.run(
-...     ["python", "magic_number.py"], capture_output=True
+... ["python", "magic_number.py"], capture_output=True
 ... )
 ...
 >>> magic_number_process.stdout.decode("utf-8")
 '72\n'
-There are other ways to put run() into text mode. You can also set a True value for errors or universal_newlines, which will also put run() into text mode. This may seem redundant, but much of this is kept for backwards compatibility, seeing as the subprocess module has changed over the years.
+Есть и другие способы перевести run() в текстовый режим. Вы также можете установить значение True для errors или universal_newlines, что также переведет run() в текстовый режим. Это может показаться излишним, но многое из этого сохранено для обеспечения обратной совместимости, поскольку модуль подпроцесса менялся на протяжении многих лет.
 
-Now that you know how to read and decode the output of a process, it’s time to take a look at writing to the input of a process.
+Теперь, когда вы знаете, как считывать и декодировать выходные данные процесса, пришло время взглянуть на запись на вход процесса.
 
-Reaction Game Example
-In this section, you’ll use subprocess to interact with a command-line game. It’s a basic program that’s designed to test a human’s reaction time. With your knowledge of standard I/O streams, though, you’ll be able to hack it! The source code of the game makes use of the time and random module:
+Пример игры на реакцию
+В этом разделе вы будете использовать подпроцесс для взаимодействия с игрой из командной строки. Это базовая программа, предназначенная для проверки времени реакции человека. Однако, с вашими знаниями стандартных потоков ввода-вывода вы сможете взломать ее! В исходном коде игры используется модуль time and random:
 
 # reaction_game.py
 
-from time import perf_counter, sleep
-from random import random
+из time импортируйте perf_counter, sleep
+из random импортируйте random
 
-print("Press enter to play")
+print("Нажмите enter, чтобы играть")
 input()
-print("Ok, get ready!")
-sleep(random() * 5 + 1)
-print("go!")
+print("Ок, приготовьтесь!")
+sleep(случайный() * 5 + 1)
+print("вперед!")
 start = perf_counter()
 input()
 end = perf_counter()
-print(f"You reacted in {(end - start) * 1000:.0f} milliseconds!\nGoodbye!")
-The program starts, asks for the user to press enter, and then after a random amount of time will ask the user to press enter again. It measures from the time the message appears to the time the user presses enter, or at least that’s what the game developer thinks:
+print(f"Вы отреагировали за {(конец - начало) * 1000:.0f} миллисекунд!\Всего хорошего!")
+Программа запускается, просит пользователя нажать enter, а затем через произвольный промежуток времени попросит пользователя снова нажать enter. Время от появления сообщения до момента, когда пользователь нажимает enter, или, по крайней мере, так думает разработчик игры:
 
 
-The input() function will read from stdin until it reaches a newline, which means an Enter keystroke in this context. It returns everything it consumed from stdin except the newline. With that knowledge, you can use subprocess to interact with this game:
+Функция input() будет считывать данные из stdin до тех пор, пока не достигнет новой строки, что в данном контексте означает нажатие клавиши Enter. Она возвращает все, что она использовала из stdin, кроме новой строки. Зная это, вы можете использовать подпроцесс для взаимодействия с этой игрой:
 
->>> import subprocess
+>>> импортировать подпроцесс
 >>> process = subprocess.run(
-...     ["python", "reaction_game.py"], input="\n\n", encoding="utf-8"
+... ["python", "reaction_game.py"], input="\n\n", encoding="utf-8"
 ... )
 ...
-Press enter to play
-Ok, get ready!
-go!
-You reacted in 0 milliseconds!
-Goodbye!
-A reaction time of 0 milliseconds! Not bad! Considering the average human reaction time is around 270 milliseconds, your program is definitely superhuman. Note that the game rounds its output, so 0 milliseconds doesn’t mean it’s instantaneous.
+Нажмите enter, чтобы воспроизвести
+Ладно, готовьтесь!
+иди!
+Вы отреагировали за 0 миллисекунд!
+До свидания!
+Время реакции 0 миллисекунд! Неплохо! Учитывая, что среднее время реакции человека составляет около 270 миллисекунд, ваша программа определенно сверхчеловеческая. Обратите внимание, что игра округляет свои выходные данные, поэтому 0 миллисекунд не означает, что это происходит мгновенно.
 
-The input argument passed to run() is a string consisting of two newlines. The encoding parameter is set to utf-8, which puts run() into text mode. This sets up the process for it to receive the input you that give it.
+Входной аргумент, передаваемый run(), представляет собой строку, состоящую из двух новых строк. Параметру encoding присвоено значение utf-8, что переводит run() в текстовый режим. Это настраивает процесс для получения входных данных, которые вы ему предоставляете.
 
-Before the program starts, stdin is stocked, waiting for the program to consume the newlines it contains. One newline is consumed to start the game, and the next newline is consumed to react to go!.
+Перед запуском программы stdin заполняется, ожидая, пока программа использует содержащиеся в нем новые строки. Одна новая строка используется для запуска игры, а следующая новая строка используется для реакции на go!.
 
-Now that you know what’s happening—namely that stdin can be stocked, as it were—you can hack the program yourself without subprocess. If you start the game and then press Enter a few times, that’ll stock up stdin with a few newlines that the program will automatically consume once it gets to the input() line. So your reaction time is really only the time it takes for the reaction game to execute start = time() and consume an input:
+Теперь, когда вы знаете, что происходит, а именно, что stdin может быть, так сказать, заполнен, вы можете взломать программу самостоятельно, без подпроцесса. Если вы запустите игру, а затем несколько раз нажмете Enter, в stdin появится несколько новых строк, которые программа автоматически использует, как только доберется до строки ввода(). Таким образом, ваше время реакции на самом деле - это только время, необходимое игре реакции для выполнения start = time() и использования входных данных:
 
-
-The game developer gets wise to this, though, and vows to release another version, which will guard against this exploit. In the meantime, you’ll peek a bit further under the hood of subprocess and learn about how it wires up the standard I/O streams.
+Однако разработчик игры понимает это и обещает выпустить другую версию, которая защитит от этого эксплойта. Тем временем вы заглянете немного глубже под капот subprocess и узнаете о том, как он подключает стандартные потоки ввода-вывода.
 
 Pipes and the Shell
 To really understand subprocesses and the redirection of streams, you really need to understand pipes and what they are. This is especially true if you want to wire up two processes together, feeding one stdout into another process’s stdin, for instance. In this section, you’ll be coming to grips with pipes and how to use them with the subprocess module.
